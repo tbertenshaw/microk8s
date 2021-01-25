@@ -122,18 +122,18 @@ def check_connectivity():
                 '--rm',
                 '-i',
                 '--restart=Never',
-                '--image=ubuntu',
+                '--image=curlimages/curl',
                 'connectivity-check',
                 '--',
-                'bash',
-                '-c',
-                'apt update && apt install -y curl && curl %s' % url,
+                url,
                 die=False,
                 stdout=False,
             )
         except subprocess.CalledProcessError:
-            print("Couldn't contact %s from within the Kubernetes cluster" % host)
-            print("Please check your network connectivity before enabling Kubeflow.")
+            print("\nCouldn't contact %s from within the Kubernetes cluster" % host)
+            print("Please check your network connectivity before enabling Kubeflow.\n")
+            print("See here for troubleshooting help:\n")
+            print("    https://microk8s.io/docs/troubleshooting#heading--common-issues")
             sys.exit(1)
 
 
@@ -196,7 +196,7 @@ def get_hostname():
 @click.command()
 @click.option(
     '--bundle',
-    default='cs:kubeflow-241',
+    default='cs:kubeflow-245',
     help='The Kubeflow bundle to deploy. Can be one of full, lite, edge, or a charm store URL.',
 )
 @click.option(
@@ -226,6 +226,7 @@ def get_hostname():
 @click.password_option(
     envvar='KUBEFLOW_AUTH_PASSWORD',
     default=get_random_pass,
+    prompt=False,
     help='The Kubeflow dashboard password.',
 )
 def kubeflow(bundle, channel, debug, hostname, ignore_min_mem, no_proxy, password):
@@ -276,11 +277,11 @@ def kubeflow(bundle, channel, debug, hostname, ignore_min_mem, no_proxy, passwor
     # user to specify a full charm store URL if they'd like, such as
     # `cs:kubeflow-lite-123`.
     if bundle == 'full':
-        bundle = 'cs:kubeflow-241'
+        bundle = 'cs:kubeflow-245'
     elif bundle == 'lite':
-        bundle = 'cs:kubeflow-lite-28'
+        bundle = 'cs:kubeflow-lite-32'
     elif bundle == 'edge':
-        bundle = 'cs:kubeflow-edge-25'
+        bundle = 'cs:kubeflow-edge-29'
     else:
         bundle = bundle
 
