@@ -25,7 +25,7 @@ jobs:
         run: sudo snap install snapcraft --classic
       - name: Build snap
         run: |
-          sg lxd -c 'snapcraft --use-lxd'
+          sg lxd -c 'snapcraft --use-lxd --build-on=arm64'
           sudo mv microk8s*.snap microk8s.snap
       - name: Uploading snap
         uses: actions/upload-artifact@v1
